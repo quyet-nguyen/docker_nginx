@@ -12,19 +12,28 @@ How to
 
 - Initialize (on server)
     + Install docker
+
     + Create docker swarm (recommend for scale latter)
         # docker swarm init
     + Deploy the services:
-        # docker deploy -c docker-compose.yml
+        # docker stack deploy -c docker-compose.yml serverinit
+
+    + As stack is currently unstable as fuck, you can fall back to docker-compose:
+    + Install git, docker-compose
+    + Clone and run 
+        # git clone git@github.com:quyet-nguyen/server_init.git
+        # cd server_init
+        # docker-compose up -d
+
     + Run renew domain cron, eg "0 0 12 ? * SUN * /opt/server_init/certbot-renew.sh"
         # crontab -e     
 
 - Create new domain certs (on server):
 # docker run -it --rm \
-    -v certbot-conf: /etc/letsencrypt \
-    -v certbot-certs: /var/lib/letsencrypt \
-    -v nginx-webroot: /usr/share/nginx/html \
-    certbot/certbot certonly \
+    -v serverinit_certbot-conf:/etc/letsencrypt \
+    -v serverinit_certbot-certs:/var/lib/letsencrypt \
+    -v serverinit_nginx-webroot:/usr/share/nginx/html \
+    certbot/certbot certonly --webroot \
     --webroot-path /usr/share/nginx/html \
     --email quyetnd112@gmail.com -d vikings.gg -d www.vikings.gg
 
