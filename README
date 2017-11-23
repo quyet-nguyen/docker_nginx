@@ -1,0 +1,36 @@
+Docker based server basic services
+==================================
+
+What's included
+---------------
+- nginx (base image, alpine)
+- certbot client (valina)
+- docker registry
+
+How to
+------
+
+- Initialize (on server)
+    + Install docker
+    + Create docker swarm (recommend for scale latter)
+        # docker swarm init
+    + Deploy the services:
+        # docker deploy -c docker-compose.yml
+    + Run renew domain cron, eg "0 0 12 ? * SUN * /opt/server_init/certbot-renew.sh"
+        # crontab -e     
+
+- Create new domain certs (on server):
+# docker run -it --rm \
+    -v certbot-conf: /etc/letsencrypt \
+    -v certbot-certs: /var/lib/letsencrypt \
+    -v nginx-webroot: /usr/share/nginx/html \
+    certbot/certbot certonly \
+    --webroot-path /usr/share/nginx/html \
+    --email quyetnd112@gmail.com -d vikings.gg -d www.vikings.gg
+
+- Renew domain certs (on server):
+# sh certbot-renew.sh
+
+- Push new image to registry
+
+- Deploy new services

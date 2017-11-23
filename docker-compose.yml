@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  nginx: 
+    image: "nginx:alpine"
+    name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx-conf: /etc/nginx
+      - nginx-webroot: /usr/share/nginx/html
+      - certbot-certs: /var/lib/letsencrypt
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  registry:
+    image:  "registry:2"
+    ports:
+      - 127.0.0.1:5000:5000
+    volumes:
+      - registry-data:/var/lib/registry
+
+volumes:
+  nginx-conf: 
+  nginx-webroot:
+  certbot-conf:
+  certbot-certs:
+  registry-data:
