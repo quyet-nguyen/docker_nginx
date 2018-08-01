@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  frontend:
+    external: true
+
 services:
   nginx: 
     image: "nginx:alpine"
@@ -11,17 +15,19 @@ services:
       - nginx-conf:/etc/nginx
       - nginx-webroot:/usr/share/nginx/html
       - certbot-certs:/var/lib/letsencrypt
+      - certbot-conf:/etc/letsencrypt
     restart: always
     deploy:
       restart_policy:
         condition: on-failure
+    networks:
+      - frontend
+      - default
 
   registry:
     image:  "registry:2"
     container_name: registry
     restart: always
-    ports:
-      - 127.0.0.1:5000:5000
     volumes:
       - registry-data:/var/lib/registry
 
