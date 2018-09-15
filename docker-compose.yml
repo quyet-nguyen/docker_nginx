@@ -24,16 +24,8 @@ services:
       - frontend
       - default
 
-  registry:
-    image:  "registry:2"
-    container_name: registry
-    restart: always
-    volumes:
-      - registry-data:/var/lib/registry
-
 volumes:
   nginx-conf: 
   nginx-webroot:
   certbot-conf:
   certbot-certs:
-  registry-data:
